@@ -1,14 +1,505 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-  <meta charset="UTF-8">
-  <title>VA2 - Dokploy</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VA2 — Dokploy &amp; Publicação de Aplicações | Documentação Técnica</title>
+<style>
+  :root{
+    --bg: #0d1117;
+    --bg-panel: #131922;
+    --bg-code: #0a0e14;
+    --line: #232b36;
+    --text: #d7dde5;
+    --text-dim: #8b96a3;
+    --accent: #4fd1a5;
+    --accent-dim: #2a5c49;
+    --warn: #e0a23a;
+    --danger: #e0613a;
+    --mono: 'SF Mono', 'Consolas', 'Menlo', monospace;
+    --sans: 'Inter', -apple-system, 'Segoe UI', sans-serif;
+  }
+  *{ box-sizing: border-box; }
+  html,body{ margin:0; padding:0; background:var(--bg); color:var(--text); font-family:var(--sans); line-height:1.6; }
+
+  .wrap{ max-width: 880px; margin: 0 auto; padding: 0 24px 120px; }
+
+  /* HEADER */
+  header{
+    border-bottom: 1px solid var(--line);
+    padding: 56px 0 40px;
+    margin-bottom: 48px;
+  }
+  .eyebrow{
+    font-family: var(--mono);
+    font-size: 12px;
+    letter-spacing: 0.12em;
+    color: var(--accent);
+    text-transform: uppercase;
+    margin-bottom: 14px;
+  }
+  h1{
+    font-size: 34px;
+    line-height: 1.2;
+    margin: 0 0 12px;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+  }
+  .subtitle{ color: var(--text-dim); font-size: 16px; max-width: 560px; }
+
+  .meta-grid{
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 16px;
+    margin-top: 32px;
+    font-family: var(--mono);
+    font-size: 13px;
+  }
+  .meta-item .k{ color: var(--text-dim); display:block; margin-bottom: 4px; font-size: 11px; text-transform: uppercase; letter-spacing: 0.06em; }
+  .meta-item .v{ color: var(--text); }
+
+  /* STATUS STRIP */
+  .status-strip{
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-top: 28px;
+  }
+  .pill{
+    font-family: var(--mono);
+    font-size: 12px;
+    padding: 6px 12px;
+    border-radius: 100px;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    border: 1px solid var(--line);
+    background: var(--bg-panel);
+  }
+  .dot{ width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
+  .dot.ok{ background: var(--accent); box-shadow: 0 0 8px var(--accent); }
+  .dot.warn{ background: var(--warn); box-shadow: 0 0 8px var(--warn); }
+
+  /* SECTIONS */
+  section{ margin-bottom: 56px; }
+  .section-head{
+    display: flex;
+    align-items: baseline;
+    gap: 14px;
+    margin-bottom: 20px;
+    padding-bottom: 14px;
+    border-bottom: 1px solid var(--line);
+  }
+  .section-num{
+    font-family: var(--mono);
+    color: var(--accent);
+    font-size: 13px;
+  }
+  h2{ font-size: 20px; margin: 0; font-weight: 600; }
+  h3{ font-size: 15px; margin: 28px 0 12px; font-weight: 600; color: var(--text); }
+  p{ color: var(--text-dim); margin: 0 0 14px; font-size: 15px; }
+  p strong{ color: var(--text); font-weight: 600; }
+  a{ color: var(--accent); text-decoration: none; border-bottom: 1px solid var(--accent-dim); }
+  a:hover{ border-bottom-color: var(--accent); }
+
+  /* CARDS */
+  .card{
+    background: var(--bg-panel);
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    padding: 20px 22px;
+    margin-bottom: 14px;
+  }
+  .card-head{
+    display:flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+  }
+  .card-title{ font-weight: 600; font-size: 15px; }
+  .badge{
+    font-family: var(--mono);
+    font-size: 11px;
+    padding: 3px 9px;
+    border-radius: 5px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+  .badge.done{ background: rgba(79,209,165,0.12); color: var(--accent); }
+  .badge.partial{ background: rgba(224,162,58,0.12); color: var(--warn); }
+
+  /* CODE */
+  pre{
+    background: var(--bg-code);
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    padding: 16px 18px;
+    overflow-x: auto;
+    font-family: var(--mono);
+    font-size: 13px;
+    color: #b8c4d1;
+    margin: 10px 0 16px;
+    line-height: 1.55;
+  }
+  code{
+    font-family: var(--mono);
+    font-size: 13px;
+    background: var(--bg-code);
+    padding: 2px 6px;
+    border-radius: 4px;
+    color: var(--accent);
+  }
+  pre code{ background: none; padding: 0; color: inherit; }
+
+  .comment{ color: var(--text-dim); }
+
+  /* TABLE */
+  table{ width:100%; border-collapse: collapse; font-size: 14px; margin: 12px 0; }
+  th{
+    text-align:left;
+    font-family: var(--mono);
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--text-dim);
+    padding: 10px 12px;
+    border-bottom: 1px solid var(--line);
+  }
+  td{
+    padding: 12px 12px;
+    border-bottom: 1px solid var(--line);
+    color: var(--text);
+    vertical-align: top;
+  }
+  td.num{ color: var(--accent); font-family: var(--mono); width: 60px; }
+
+  /* TIMELINE / STEPS */
+  .steps{ counter-reset: step; }
+  .step{
+    display: flex;
+    gap: 16px;
+    margin-bottom: 18px;
+    position: relative;
+  }
+  .step-marker{
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--accent);
+    background: var(--bg-panel);
+    border: 1px solid var(--accent-dim);
+    width: 26px; height: 26px;
+    border-radius: 50%;
+    display:flex; align-items:center; justify-content:center;
+    flex-shrink: 0;
+  }
+  .step-body{ padding-top: 2px; }
+  .step-body strong{ display:block; color: var(--text); margin-bottom: 2px; font-size: 14px; }
+  .step-body span{ color: var(--text-dim); font-size: 13.5px; }
+
+  /* INCIDENT LOG */
+  .incident{
+    border-left: 2px solid var(--danger);
+    padding: 4px 0 4px 18px;
+    margin-bottom: 18px;
+  }
+  .incident .title{ font-weight: 600; font-size: 14px; margin-bottom: 4px; color: var(--text); }
+  .incident .fix{ color: var(--accent); font-size: 13.5px; }
+  .incident .fix::before{ content: "→ "; }
+
+  /* TEAM */
+  .team-grid{ display: grid; grid-template-columns: repeat(auto-fit, minmax(220px,1fr)); gap: 12px; }
+  .team-card{
+    background: var(--bg-panel);
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    padding: 16px 18px;
+  }
+  .team-card .role{ font-family: var(--mono); font-size: 11px; color: var(--accent); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 4px; }
+  .team-card .name{ font-size: 16px; font-weight: 600; }
+
+  /* LINKS GRID */
+  .link-grid{ display:grid; grid-template-columns: repeat(auto-fit, minmax(240px,1fr)); gap: 12px; }
+  .link-card{
+    background: var(--bg-panel);
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    padding: 16px 18px;
+    display:block;
+  }
+  .link-card .label{ font-family: var(--mono); font-size: 11px; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 6px; }
+  .link-card .url{ color: var(--accent); font-family: var(--mono); font-size: 13.5px; word-break: break-all; }
+  .link-card:hover{ border-color: var(--accent-dim); }
+
+  footer{
+    border-top: 1px solid var(--line);
+    padding-top: 24px;
+    color: var(--text-dim);
+    font-size: 13px;
+    font-family: var(--mono);
+  }
+
+  @media (max-width: 600px){
+    h1{ font-size: 26px; }
+    .wrap{ padding: 0 16px 80px; }
+    header{ padding: 36px 0 28px; }
+  }
+</style>
 </head>
 <body>
-  <h1>Projeto VA2 - Infraestrutura para Sistemas de Informação</h1>
-  <p><strong>Equipe:</strong> Luis Eduardo de Souza Pierre, Itzac Angelo Albertin</p>
-  <p><strong>Tecnologias:</strong> Node.js, React, PostgreSQL, Docker, Dokploy</p>
-  <p><strong>Repositório:</strong> <a href="https://github.com/seu-usuario/seu-repo">GitHub</a></p>
-  <p><strong>Aplicação:</strong> <a href="https://sua-app.exemplo.com">Acessar app</a></p>
+<div class="wrap">
+
+  <header>
+    <div class="eyebrow">UEG · Sistemas de Informação · 7º Período</div>
+    <h1>VA2 — Dokploy &amp; Publicação de Aplicações em Nuvem</h1>
+    <p class="subtitle">Documentação técnica do processo de implementação: provisionamento de servidor, orquestração com Dokploy e publicação de uma aplicação fullstack com integração contínua via GitHub.</p>
+
+    <div class="meta-grid">
+      <div class="meta-item"><span class="k">Disciplina</span><span class="v">Infraestrutura para SI</span></div>
+      <div class="meta-item"><span class="k">Docente</span><span class="v">Prof. Guiliano Rangel Alves</span></div>
+      <div class="meta-item"><span class="k">Entrega</span><span class="v">20/06/2026</span></div>
+      <div class="meta-item"><span class="k">Infra</span><span class="v">VM local — VirtualBox</span></div>
+    </div>
+
+    <div class="status-strip">
+      <span class="pill"><span class="dot ok"></span>Backend (Node.js)</span>
+      <span class="pill"><span class="dot ok"></span>Frontend (React)</span>
+      <span class="pill"><span class="dot ok"></span>PostgreSQL</span>
+      <span class="pill"><span class="dot ok"></span>Dokploy</span>
+      <span class="pill"><span class="dot ok"></span>Página descritiva (Nginx)</span>
+      <span class="pill"><span class="dot warn"></span>Túnel público — Quick Tunnel</span>
+    </div>
+  </header>
+
+  <!-- EQUIPE -->
+  <section>
+    <div class="section-head"><span class="section-num">00</span><h2>Equipe</h2></div>
+    <div class="team-grid">
+      <div class="team-card">
+        <div class="role">Integrante</div>
+        <div class="name">[Seu nome aqui]</div>
+      </div>
+      <div class="team-card">
+        <div class="role">Integrante</div>
+        <div class="name">[Nome do colega aqui]</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ARQUITETURA -->
+  <section>
+    <div class="section-head"><span class="section-num">01</span><h2>Arquitetura</h2></div>
+    <p>A aplicação foi dividida em três serviços independentes, orquestrados pelo Dokploy sobre Docker Swarm em um único nó (VM Ubuntu local). Cada serviço é construído a partir de um repositório no GitHub, com build automático via Dockerfile e deploy disparado por push.</p>
+
+    <pre><span class="comment">┌─────────────────────────────────────────────────────────┐
+│                     VM Ubuntu (VirtualBox)               │
+│                  Docker Swarm · Dokploy v0.29.8           │
+│                                                            │
+│   ┌──────────────┐    ┌──────────────┐    ┌────────────┐ │
+│   │   Frontend   │───▶│   Backend    │───▶│  Postgres  │ │
+│   │   (React)    │    │  (Node.js)   │    │  16-alpine │ │
+│   │  porta 8080  │    │  porta 4000  │    │ porta 5432 │ │
+│   └──────────────┘    └──────────────┘    └────────────┘ │
+│                                                            │
+│   ┌──────────────────────────┐                            │
+│   │  Página Descritiva (Nginx)│                            │
+│   │       porta 8081           │                           │
+│   └──────────────────────────┘                            │
+└─────────────────────────────────────────────────────────┘
+                         │
+                  Cloudflare Tunnel
+                         │
+                    Internet pública</span></pre>
+
+    <h3>Stack utilizada</h3>
+    <table>
+      <tr><th>Camada</th><th>Tecnologia</th></tr>
+      <tr><td>Backend</td><td>Node.js + Express</td></tr>
+      <tr><td>Frontend</td><td>React (Vite)</td></tr>
+      <tr><td>Banco de dados</td><td>PostgreSQL 16 (alpine)</td></tr>
+      <tr><td>Orquestração</td><td>Docker Swarm via Dokploy v0.29.8</td></tr>
+      <tr><td>Servidor web (página descritiva)</td><td>Nginx</td></tr>
+      <tr><td>CI/CD</td><td>GitHub Webhooks → Auto Deploy (Dokploy)</td></tr>
+      <tr><td>Exposição pública</td><td>Cloudflare Tunnel (Quick Tunnel)</td></tr>
+    </table>
+  </section>
+
+  <!-- ETAPA 1 -->
+  <section>
+    <div class="section-head"><span class="section-num">02</span><h2>Infraestrutura base</h2></div>
+
+    <div class="card">
+      <div class="card-head"><span class="card-title">Provisionamento da VM</span><span class="badge done">concluído</span></div>
+      <p>VM Ubuntu provisionada localmente no Oracle VirtualBox, com 40GB de disco (redimensionado de 20GB após esgotamento de espaço — ver seção de incidentes) e adaptador de rede em modo <strong>Bridge</strong>, permitindo acesso direto pela rede local.</p>
+    </div>
+
+    <div class="card">
+      <div class="card-head"><span class="card-title">Acesso e segurança</span><span class="badge done">concluído</span></div>
+      <p>Acesso remoto via SSH habilitado, firewall configurado com UFW liberando as portas necessárias.</p>
+      <pre><span class="comment"># Atualização do sistema</span>
+sudo apt update &amp;&amp; sudo apt upgrade -y
+
+<span class="comment"># SSH</span>
+sudo apt install openssh-server -y
+sudo systemctl enable ssh
+
+<span class="comment"># Firewall</span>
+sudo ufw allow OpenSSH
+sudo ufw allow 80/tcp
+sudo ufw allow 443/tcp
+sudo ufw allow 3000/tcp
+sudo ufw allow 8080/tcp
+sudo ufw allow 8081/tcp
+sudo ufw enable</pre>
+    </div>
+
+    <div class="card">
+      <div class="card-head"><span class="card-title">Docker</span><span class="badge done">concluído</span></div>
+      <pre>curl -fsSL https://get.docker.com -o get-docker.sh
+sudo sh get-docker.sh
+sudo usermod -aG docker $USER</pre>
+    </div>
+  </section>
+
+  <!-- ETAPA 2 -->
+  <section>
+    <div class="section-head"><span class="section-num">03</span><h2>Dokploy</h2></div>
+    <p>Instalado via script oficial, que provisiona Docker Swarm, Traefik (proxy reverso), Postgres e Redis internos automaticamente.</p>
+    <pre>curl -sSL https://dokploy.com/install.sh | sh</pre>
+    <p>Painel administrativo acessível em <code>http://&lt;ip-da-vm&gt;:3000</code>, com usuário administrador configurado no primeiro acesso.</p>
+  </section>
+
+  <!-- ETAPA 3 -->
+  <section>
+    <div class="section-head"><span class="section-num">04</span><h2>Página descritiva</h2></div>
+    <p>Servida via <strong>Nginx</strong> (imagem <code>nginx:alpine</code>), com build automático a partir do repositório GitHub conectado ao Dokploy. Hospeda esta própria documentação.</p>
+    <table>
+      <tr><th>Item</th><th>Valor</th></tr>
+      <tr><td>Servidor</td><td>Nginx (nginx:alpine)</td></tr>
+      <tr><td>Porta interna</td><td>80</td></tr>
+      <tr><td>Porta publicada (host)</td><td>8081</td></tr>
+      <tr><td>Modo de publicação</td><td>Host</td></tr>
+    </table>
+  </section>
+
+  <!-- ETAPA 4 -->
+  <section>
+    <div class="section-head"><span class="section-num">05</span><h2>Aplicação web</h2></div>
+    <p>Sistema de lista de tarefas (To-Do List) com CRUD completo, dividido em backend e frontend independentes.</p>
+
+    <h3>Backend — Node.js</h3>
+    <table>
+      <tr><th>Endpoint</th><th>Método</th><th>Função</th></tr>
+      <tr><td><code>/api/tasks</code></td><td class="num">GET</td><td>Lista todas as tarefas</td></tr>
+      <tr><td><code>/api/tasks</code></td><td class="num">POST</td><td>Cria nova tarefa</td></tr>
+      <tr><td><code>/api/tasks/:id</code></td><td class="num">PUT</td><td>Atualiza status (concluída/pendente)</td></tr>
+      <tr><td><code>/api/tasks/:id</code></td><td class="num">DELETE</td><td>Remove tarefa</td></tr>
+    </table>
+
+    <h3>Variáveis de ambiente (backend)</h3>
+    <pre>DB_HOST=todoapp-db-r2wnec
+DB_PORT=5432
+DB_USER=postgres
+DB_PASSWORD=********
+DB_NAME=todoapp
+PORT=4000</pre>
+
+    <h3>Banco de dados</h3>
+    <p>PostgreSQL com volume persistente configurado no Dokploy, garantindo que os dados sobrevivam a reinicializações do container.</p>
+    <pre>CREATE TABLE IF NOT EXISTS tasks (
+  id SERIAL PRIMARY KEY,
+  title VARCHAR(255) NOT NULL,
+  done BOOLEAN DEFAULT false,
+  created_at TIMESTAMP DEFAULT NOW()
+);</pre>
+  </section>
+
+  <!-- ETAPA 5 -->
+  <section>
+    <div class="section-head"><span class="section-num">06</span><h2>Publicação e CI/CD</h2></div>
+    <div class="steps">
+      <div class="step">
+        <div class="step-marker">1</div>
+        <div class="step-body"><strong>GitHub App conectado ao Dokploy</strong><span>Autorização via GitHub Apps, com acesso aos repositórios do projeto.</span></div>
+      </div>
+      <div class="step">
+        <div class="step-marker">2</div>
+        <div class="step-body"><strong>Build automático via Dockerfile</strong><span>Cada serviço (backend, frontend, página) aponta para seu Build Path no repositório.</span></div>
+      </div>
+      <div class="step">
+        <div class="step-marker">3</div>
+        <div class="step-body"><strong>Trigger Type: On Push</strong><span>Webhook do GitHub configurado automaticamente pelo Dokploy — qualquer push na branch <code>main</code> dispara novo deploy.</span></div>
+      </div>
+      <div class="step">
+        <div class="step-marker">4</div>
+        <div class="step-body"><strong>Persistência via volumes</strong><span>Banco de dados com volume Docker dedicado, independente do ciclo de vida do container.</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ETAPA 6 -->
+  <section>
+    <div class="section-head"><span class="section-num">07</span><h2>Disponibilidade pública</h2></div>
+    <p>Como o servidor é uma VM local (sem IP público), a exposição à internet foi feita via <strong>Cloudflare Tunnel</strong> (modo Quick Tunnel), conforme previsto no edital para ambientes sem IP fixo.</p>
+    <pre>cloudflared tunnel --url http://localhost:8080   <span class="comment"># frontend</span>
+cloudflared tunnel --url http://localhost:8081   <span class="comment"># página descritiva</span></pre>
+
+    <div class="link-grid">
+      <a class="link-card" href="#">
+        <div class="label">Aplicação (frontend)</div>
+        <div class="url">https://[atualizar-url].trycloudflare.com</div>
+      </a>
+      <a class="link-card" href="#">
+        <div class="label">Página descritiva</div>
+        <div class="url">https://[atualizar-url].trycloudflare.com</div>
+      </a>
+      <a class="link-card" href="#">
+        <div class="label">Repositório — Aplicação</div>
+        <div class="url">github.com/[usuario]/todo-app</div>
+      </a>
+      <a class="link-card" href="#">
+        <div class="label">Repositório — Página descritiva</div>
+        <div class="url">github.com/[usuario]/va2-pagina-descritiva</div>
+      </a>
+    </div>
+
+    <p style="margin-top:16px;"><strong>Observação:</strong> URLs de Quick Tunnel são geradas dinamicamente a cada execução do processo <code>cloudflared</code> e não são fixas. Atualize os links acima antes da entrega final com as URLs ativas no momento da apresentação.</p>
+  </section>
+
+  <!-- INCIDENTES -->
+  <section>
+    <div class="section-head"><span class="section-num">08</span><h2>Registro de incidentes &amp; resolução</h2></div>
+    <p>Conforme previsto no edital, documentamos abaixo as principais dificuldades técnicas enfrentadas e como foram resolvidas — parte do processo real de gestão de infraestrutura.</p>
+
+    <div class="incident">
+      <div class="title">VM inacessível via IP — modo de rede NAT</div>
+      <div class="fix">Adaptador de rede alterado de NAT para Bridge, permitindo acesso direto pela rede local.</div>
+    </div>
+
+    <div class="incident">
+      <div class="title">Disco saturado (100%) derrubando Dokploy e Postgres interno</div>
+      <div class="fix">Disco virtual redimensionado de 20GB para 40GB via VBoxManage; partição e LVM expandidos com growpart, pvresize, lvextend e resize2fs.</div>
+    </div>
+
+    <div class="incident">
+      <div class="title">Imagem postgres:18 causando loop de restart (exit code 1)</div>
+      <div class="fix">Substituída pela imagem estável postgres:16-alpine.</div>
+    </div>
+
+    <div class="incident">
+      <div class="title">Backend não conectava ao banco (ECONNREFUSED em localhost:5432)</div>
+      <div class="fix">Variável DB_HOST corrigida para apontar ao hostname interno do serviço de banco no Swarm, em vez de localhost.</div>
+    </div>
+
+    <div class="incident">
+      <div class="title">Portas publicadas em modo Ingress não respondiam no host</div>
+      <div class="fix">Alterado o Published Port Mode de Ingress para Host, adequado a um Swarm de nó único.</div>
+    </div>
+  </section>
+
+  <footer>
+    Documentação gerada como parte da entrega da VA2 — UEG, Anápolis/GO · Atualize os campos entre [colchetes] antes da entrega final.
+  </footer>
+
+</div>
 </body>
 </html>
